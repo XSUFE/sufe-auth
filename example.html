@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SUFE Auth Demo</title>
+    <style>
+      :root {
+        --bg: #f3efe8;
+        --card: #fffdf9;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --primary: #0b5d52;
+        --danger: #b42318;
+        --border: #d8d1c5;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          "Avenir Next", "PingFang SC", "Hiragino Sans GB", sans-serif;
+        background: radial-gradient(
+          circle at top left,
+          #efe7d9 0%,
+          var(--bg) 40%,
+          #e9ecef 100%
+        );
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .card {
+        width: min(720px, 100%);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 28px;
+        letter-spacing: 0.2px;
+      }
+
+      .desc {
+        margin: 0 0 20px;
+        color: var(--muted);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        background: var(--primary);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        background: #344054;
+      }
+
+      .captcha-wrap {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      #captcha {
+        width: 160px;
+        height: 52px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #fff;
+        object-fit: contain;
+      }
+
+      pre {
+        margin-top: 16px;
+        background: #101828;
+        color: #e5e7eb;
+        border-radius: 12px;
+        padding: 12px;
+        overflow: auto;
+        min-height: 140px;
+      }
+
+      .err {
+        color: var(--danger);
+      }
+
+      @media (max-width: 640px) {
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>SUFE SMS Login Demo</h1>
+      <p class="desc">
+        Flow: get captcha -> send SMS with captcha -> login with SMS code.
+      </p>
+
+      <div class="row">
+        <div>
+          <label for="username">Username</label>
+          <input id="username" placeholder="Enter student ID / username" />
+        </div>
+        <div>
+          <label for="vcode">Captcha</label>
+          <input id="vcode" placeholder="4 characters" />
+        </div>
+      </div>
+
+      <div class="captcha-wrap">
+        <img id="captcha" alt="captcha" />
+        <button id="refreshCaptcha" class="secondary">Refresh captcha</button>
+      </div>
+
+      <div class="actions">
+        <button id="sendSms">Send SMS code</button>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="smsCode">SMS code</label>
+          <input id="smsCode" placeholder="Enter SMS code" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="doLogin">Login</button>
+      </div>
+
+      <div id="status" class="err"></div>
+      <pre id="output">Waiting for action...</pre>
+    </main>
+
+    <script>
+      const output = document.getElementById("output");
+      const statusEl = document.getElementById("status");
+      const captchaImg = document.getElementById("captcha");
+
+      function setOutput(data) {
+        output.textContent = JSON.stringify(data, null, 2);
+      }
+
+      function setError(text) {
+        statusEl.textContent = text || "";
+      }
+
+      async function refreshCaptcha() {
+        setError("");
+        const res = await fetch("/api/captcha", { credentials: "include" });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Failed to get captcha: ${res.status}`);
+        }
+        const blob = await res.blob();
+        captchaImg.src = URL.createObjectURL(blob);
+        setOutput({ step: "captcha", msg: "Captcha refreshed" });
+      }
+
+      async function postJson(url, body) {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(body),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || `Request failed: ${res.status}`);
+        }
+        return data.result;
+      }
+
+      document
+        .getElementById("refreshCaptcha")
+        .addEventListener("click", async () => {
+          try {
+            await refreshCaptcha();
+          } catch (e) {
+            setError(e.message);
+          }
+        });
+
+      document.getElementById("sendSms").addEventListener("click", async () => {
+        try {
+          setError("");
+          const username = document.getElementById("username").value.trim();
+          const vcode = document.getElementById("vcode").value.trim();
+          const result = await postJson("/api/sms", { username, vcode });
+          setOutput(result);
+        } catch (e) {
+          setError(e.message);
+        }
+      });
+
+      document.getElementById("doLogin").addEventListener("click", async () => {
+        try {
+          setError("");
+          const username = document.getElementById("username").value.trim();
+          const smsCode = document.getElementById("smsCode").value.trim();
+          const result = await postJson("/api/login", { username, smsCode });
+          setOutput(result);
+        } catch (e) {
+          setError(e.message);
+        }
+      });
+
+      refreshCaptcha().catch((e) => setError(e.message));
+    </script>
+  </body>
+</html>
