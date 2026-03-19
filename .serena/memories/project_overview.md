@@ -1,19 +1,22 @@
 # sufe-auth project overview
 
-- Purpose: TypeScript library for Shanghai University of Finance and Economics (SUFE) unified authentication via captcha + SMS login flow.
-- Package target: Published as `@xsufe/sufe-auth` (JSR), exports `index.ts`.
-- Primary runtime: Bun (examples/server/tests use Bun APIs).
+- Purpose: TypeScript SDK for Shanghai University of Finance and Economics (SUFE) authentication.
+- Package target: Published as `@xsufe/sufe-auth` (JSR), export entry is `index.ts`.
+- Primary runtime: Bun (tests and local demos).
 - Main capabilities:
   - `getCaptcha()` fetches captcha image and session cookie
-  - `sendSms()` sends SMS code request and validates SSO business code (`code === "0"`)
-  - `login()` performs SMS login and validates SSO business code
-  - `LoginError` provides domain-specific failure handling
+  - `sendSms()` requests SMS code and validates business response code
+  - `login()` completes SMS login and validates business response code
+  - `secondAuthByPhoneLast4()` provides second auth method using `username + phoneLast4`
+  - `authByPhoneLast4` is a backward-compatible alias
+  - `LoginError` is the unified domain error type
 - Codebase structure:
-  - `index.ts`: library implementation, public types/functions/errors
-  - `lib.test.ts`: bun tests for endpoint constants and business-code error behavior
-  - `example.ts`: CLI-like demo script
-  - `example-server.ts` + `example.html`: local interactive demo web flow
-  - `utils.ts`: input helpers for local demo/testing
+  - `index.ts`: public barrel exports only
+  - `core/`: shared modules (`constants.ts`, `types.ts`, `errors.ts`, `http.ts`, `crypto.ts`)
+  - `methods/`: feature modules per auth method
+  - `examples/script-demo.ts`: CLI-like runnable demo
+  - `examples/html-demo/server.ts` + `examples/html-demo/index.html`: local interactive web demo
+  - `lib.test.ts`: bun tests for endpoints, business-code handling, and second-auth behavior
   - `jsr.json`: JSR package metadata (`exports: ./index.ts`)
-  - `package.json`: scripts + dev tooling (Prettier)
-  - `tsconfig.json`: strict TS config, ESNext + bundler resolution
+  - `package.json`: scripts + Prettier tooling
+  - `tsconfig.json`: strict TypeScript config

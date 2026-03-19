@@ -1,4 +1,9 @@
-import { getCaptcha, login, secondAuthByPhoneLast4, sendSms } from ".";
+import {
+  getCaptcha,
+  login,
+  secondAuthByPhoneLast4,
+  sendSms,
+} from "../../index";
 
 const sessions = new Map<string, string>();
 
@@ -41,7 +46,7 @@ const server = Bun.serve({
     const url = new URL(req.url);
 
     if (url.pathname === "/") {
-      return new Response(Bun.file("example.html"), {
+      return new Response(Bun.file(new URL("./index.html", import.meta.url)), {
         headers: { "Content-Type": "text/html; charset=utf-8" },
       });
     }

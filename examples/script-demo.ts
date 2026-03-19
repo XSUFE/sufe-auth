@@ -1,4 +1,4 @@
-import { getCaptcha, login, sendSms } from ".";
+import { getCaptcha, login, sendSms } from "../index";
 import { getTestAccount, input } from "./utils";
 
 const { username } = await getTestAccount();

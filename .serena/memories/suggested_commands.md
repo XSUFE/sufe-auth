@@ -7,14 +7,18 @@
 
 ## Run entrypoints
 
-- `bun run example.ts` (script demo)
-- `bun run example-server.ts` (interactive local demo at http://localhost:3000)
-- `pnpm run dev` (formats then runs example server)
+- `bun run examples/script-demo.ts` (script demo)
+- `bun run examples/html-demo/server.ts` (interactive demo at http://localhost:3000)
+- `pnpm run dev` (formats then runs HTML demo server)
 
 ## Test
 
 - `bun test`
 - `bun test lib.test.ts`
+
+## Typecheck
+
+- `bunx tsc --noEmit`
 
 ## Format / checks
 

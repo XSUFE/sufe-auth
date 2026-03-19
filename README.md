@@ -1,6 +1,6 @@
 # sufe-auth
 
-Shanghai University of Finance and Economics unified authentication (SMS login).
+Shanghai University of Finance and Economics unified authentication SDK.
 
 ## Install
 
@@ -33,6 +33,12 @@ const result = await login({ username, smsCode, cookie });
 console.log(result.body); // success: { code: "0", msg: "success", data: {...}, ... }
 ```
 
+Local runnable script demo:
+
+```sh
+bun run examples/script-demo.ts
+```
+
 `sendSms` and `login` now validate business response codes:
 
 - `code === "0"` is treated as success
@@ -61,18 +67,32 @@ Behavior:
 
 ## Usage (HTML Demo)
 
-This repository includes an interactive page: `example.html`.
+This repository includes an interactive page: `examples/html-demo/index.html`.
 
 Start the local demo server:
 
 ```sh
-bun run example-server.ts
+bun run examples/html-demo/server.ts
 ```
 
 Then open: `http://localhost:3000`
 
-Flow:
+Method 1 flow:
 
 1. Fetch and display captcha image
 2. Enter captcha text and send SMS code
 3. Enter SMS code and log in
+
+Method 2 flow:
+
+1. Enter username (second auth section)
+2. Enter phone last-4 digits
+3. Verify username + phone last-4
+
+## Project Structure
+
+- `index.ts`: public SDK entry (barrel exports)
+- `core/`: shared constants, types, errors, http/crypto helpers
+- `methods/`: auth method implementations (`getCaptcha`, `sendSms`, `login`, `secondAuthByPhoneLast4`)
+- `examples/`: runnable demos (`script-demo.ts`, `html-demo/`)
+- `lib.test.ts`: Bun unit tests

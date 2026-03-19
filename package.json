@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "mock-publish": "pnpm run format && pnpm dlx jsr publish --dry-run",
-    "dev": "pnpm run format && bun run example-server.ts"
+    "dev": "pnpm run format && bun run examples/html-demo/server.ts"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
