@@ -1,4 +1,4 @@
-import { getCaptcha, login, sendSms } from ".";
+import { getCaptcha, login, secondAuthByPhoneLast4, sendSms } from ".";
 
 const sessions = new Map<string, string>();
 
@@ -123,6 +123,30 @@ const server = Bun.serve({
           username: body.username,
           smsCode: body.smsCode,
           cookie,
+        });
+        return json({ ok: true, result: result.body });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        return json({ ok: false, error: message }, { status: 400 });
+      }
+    }
+
+    if (url.pathname === "/api/second-auth" && req.method === "POST") {
+      try {
+        const body = (await req.json()) as {
+          username?: string;
+          phoneLast4?: string;
+        };
+        if (!body.username || !body.phoneLast4) {
+          return json(
+            { ok: false, error: "username and phoneLast4 are required." },
+            { status: 400 }
+          );
+        }
+
+        const result = await secondAuthByPhoneLast4({
+          username: body.username,
+          phoneLast4: body.phoneLast4,
         });
         return json({ ok: true, result: result.body });
       } catch (error) {

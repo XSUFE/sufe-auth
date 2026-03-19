@@ -1,4 +1,5 @@
 # sufe-auth project overview
+
 - Purpose: TypeScript library for Shanghai University of Finance and Economics (SUFE) unified authentication via captcha + SMS login flow.
 - Package target: Published as `@xsufe/sufe-auth` (JSR), exports `index.ts`.
 - Primary runtime: Bun (examples/server/tests use Bun APIs).

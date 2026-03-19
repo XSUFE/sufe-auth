@@ -84,6 +84,11 @@
         margin: 14px 0;
       }
 
+      .section-title {
+        margin: 20px 0 8px;
+        font-weight: 600;
+      }
+
       button {
         border: 0;
         border-radius: 10px;
@@ -136,9 +141,10 @@
   </head>
   <body>
     <main class="card">
-      <h1>SUFE SMS Login Demo</h1>
+      <h1>SUFE Auth Demo</h1>
       <p class="desc">
-        Flow: get captcha -> send SMS with captcha -> login with SMS code.
+        Method 1: captcha -> send SMS -> login. Method 2: username + phone
+        last-4.
       </p>
 
       <div class="row">
@@ -170,6 +176,27 @@
 
       <div class="actions">
         <button id="doLogin">Login</button>
+      </div>
+
+      <p class="section-title">Second Auth Method</p>
+      <div class="row">
+        <div>
+          <label for="usernameSecond">Username</label>
+          <input
+            id="usernameSecond"
+            placeholder="Enter student ID / username"
+          />
+        </div>
+        <div>
+          <label for="phoneLast4">Phone last 4 digits</label>
+          <input id="phoneLast4" placeholder="e.g. 6555" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="secondAuth" class="secondary">
+          Verify username + phone last-4
+        </button>
       </div>
 
       <div id="status" class="err"></div>
@@ -249,7 +276,30 @@
         }
       });
 
-      refreshCaptcha().catch((e) => setError(e.message));
+      document
+        .getElementById("secondAuth")
+        .addEventListener("click", async () => {
+          try {
+            setError("");
+            const username = document
+              .getElementById("usernameSecond")
+              .value.trim();
+            const phoneLast4 = document
+              .getElementById("phoneLast4")
+              .value.trim();
+            const result = await postJson("/api/second-auth", {
+              username,
+              phoneLast4,
+            });
+            setOutput(result);
+          } catch (e) {
+            setError(e.message);
+          }
+        });
+
+      setOutput({
+        msg: "Choose an auth method. Refresh captcha only for Method 1.",
+      });
     </script>
   </body>
 </html>

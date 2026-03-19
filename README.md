@@ -40,6 +40,25 @@ console.log(result.body); // success: { code: "0", msg: "success", data: {...}, 
   - `ESSO000004` captcha validation failed
   - `SSO10010` SMS code incorrect
 
+## Second Auth Method (Phone Last 4)
+
+Use this as the second auth method, separate from captcha+SMS login:
+
+```ts
+import { secondAuthByPhoneLast4 } from "@xsufe/sufe-auth";
+
+await secondAuthByPhoneLast4({
+  username: "your_username",
+  phoneLast4: "6555",
+});
+```
+
+Behavior:
+
+- username is AES-CBC encrypted before calling SUFE resetType API
+- API `code !== "0"` throws `LoginError`
+- if no SMS method matches the provided last-4 digits, throws `LoginError`
+
 ## Usage (HTML Demo)
 
 This repository includes an interactive page: `example.html`.

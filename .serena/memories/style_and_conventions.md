@@ -1,4 +1,5 @@
 # Style and conventions
+
 - Language: TypeScript (ES modules, `type: module`).
 - TS strictness: `strict: true`, `noFallthroughCasesInSwitch: true`, `skipLibCheck: true`.
 - Formatting via Prettier:

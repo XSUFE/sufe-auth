@@ -1,25 +1,32 @@
 # Suggested commands (Darwin/macOS)
+
 ## Install / setup
+
 - `pnpm install`
 - `bun install`
 
 ## Run entrypoints
+
 - `bun run example.ts` (script demo)
 - `bun run example-server.ts` (interactive local demo at http://localhost:3000)
 - `pnpm run dev` (formats then runs example server)
 
 ## Test
+
 - `bun test`
 - `bun test lib.test.ts`
 
 ## Format / checks
+
 - `pnpm run format` (Prettier write)
 - `pnpm run format:check` (Prettier check)
 
 ## Publish-related
+
 - `pnpm run mock-publish` (format + JSR dry run)
 
 ## Useful local shell commands
+
 - `git status`, `git diff`, `git log --oneline -n 10`
 - `ls -la`, `cd <dir>`, `pwd`
 - `rg <pattern>`, `rg --files`

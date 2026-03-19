@@ -1,4 +1,5 @@
 # Task completion checklist
+
 - Run formatting check: `pnpm run format:check`.
 - If formatting changed or required: run `pnpm run format` and re-check.
 - Run tests: `bun test` (or targeted `bun test lib.test.ts` during iteration, then full test run).
