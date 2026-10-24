@@ -99,6 +99,12 @@ bun run format:check
 bun run mock-publish
 ```
 
+Update the published version in `jsr.json`:
+
+```sh
+bun run version <VERSION>
+```
+
 ## Project Structure
 
 - `index.ts`: public SDK entry (barrel exports)
