@@ -105,6 +105,11 @@ Update the published version in `jsr.json`:
 bun run version <VERSION>
 ```
 
+Pushes to `main` run checks without publishing. To publish, open GitHub Actions,
+select **Publish**, choose **Run workflow** on `main`, and check
+**Publish the version in jsr.json to JSR** before starting the workflow.
+Publishing runs only after all checks pass.
+
 ## Project Structure
 
 - `index.ts`: public SDK entry (barrel exports)

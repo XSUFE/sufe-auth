@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      confirm_publish:
+        description: "Publish the version in jsr.json to JSR"
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   publish:
@@ -32,4 +39,5 @@ jobs:
         run: bun test
 
       - name: Publish package
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.confirm_publish }}
         run: bunx --bun jsr publish
