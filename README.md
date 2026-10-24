@@ -5,10 +5,7 @@ Shanghai University of Finance and Economics unified authentication SDK.
 ## Install
 
 ```sh
-# pnpm
-pnpm dlx jsr add @xsufe/sufe-auth
-# bun
-bunx jsr add @xsufe/sufe-auth
+bunx --bun jsr add @xsufe/sufe-auth
 ```
 
 See [jsr.io/@xsufe/sufe-auth](https://jsr.io/@xsufe/sufe-auth).
@@ -88,6 +85,19 @@ Method 2 flow:
 1. Enter username (second auth section)
 2. Enter phone last-4 digits
 3. Verify username + phone last-4
+
+## Development
+
+Use Bun 1.4.4 for dependency management, scripts, and tests.
+
+```sh
+bun install --frozen-lockfile
+bun run dev
+bun test
+bun run typecheck
+bun run format:check
+bun run mock-publish
+```
 
 ## Project Structure
 
