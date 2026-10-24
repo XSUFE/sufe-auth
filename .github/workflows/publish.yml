@@ -4,20 +4,13 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      confirm_publish:
-        description: "Publish the version in jsr.json to JSR"
-        required: true
-        default: false
-        type: boolean
 
 jobs:
-  publish:
+  checks:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
-      id-token: write
 
     steps:
       - uses: actions/checkout@v6
@@ -38,6 +31,22 @@ jobs:
       - name: Test
         run: bun test
 
+  publish:
+    needs: checks
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment: jsr
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
       - name: Publish package
-        if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.confirm_publish }}
         run: bunx --bun jsr publish
