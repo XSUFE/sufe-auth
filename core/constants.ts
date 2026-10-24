@@ -1,3 +1,4 @@
+/** SUFE service URLs used by the authentication operations. */
 export const SUFE_ENDPOINTS = {
   captcha: "https://login.sufe.edu.cn/esc-sso/api/v1/image/getRandcode",
   smsSend: "https://login.sufe.edu.cn/esc-sso/api/v3/sms/send",

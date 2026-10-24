@@ -8,6 +8,13 @@ import {
 } from "../core/http";
 import type { CaptchaResult, RequestOptions } from "../core/types";
 
+/**
+ * Fetch a captcha image and its session cookie from SUFE.
+ *
+ * @param options Optional HTTP header overrides.
+ * @returns Image bytes and the cookie to reuse for SMS and login requests.
+ * @throws {LoginError} If the service rejects the request or omits the cookie.
+ */
 export async function getCaptcha(
   options?: RequestOptions
 ): Promise<CaptchaResult> {

@@ -9,6 +9,13 @@ import {
 } from "../core/http";
 import type { LoginData, LoginOptions, LoginResult } from "../core/types";
 
+/**
+ * Complete SUFE login using an SMS verification code.
+ *
+ * @param options Account, SMS code, and cookie used to request that code.
+ * @returns The successful service response and supplied session cookie.
+ * @throws {LoginError} If HTTP, response validation, or business checks fail.
+ */
 export async function login(options: LoginOptions): Promise<LoginResult> {
   const payload = {
     authType: "webSmsAuth",

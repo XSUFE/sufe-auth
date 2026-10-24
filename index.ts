@@ -22,5 +22,5 @@ export { login } from "./methods/login";
 export { secondAuthByPhoneLast4 } from "./methods/secondAuthByPhoneLast4";
 export { sendSms } from "./methods/sendSms";
 
-// Backward-compatible alias.
+/** Backward-compatible alias of {@link secondAuthByPhoneLast4}. */
 export { secondAuthByPhoneLast4 as authByPhoneLast4 } from "./methods/secondAuthByPhoneLast4";

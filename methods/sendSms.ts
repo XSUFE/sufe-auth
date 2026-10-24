@@ -9,6 +9,13 @@ import {
 } from "../core/http";
 import type { SendSmsOptions, SmsSendData, SmsSendResult } from "../core/types";
 
+/**
+ * Request an SMS verification code using a captcha and its session cookie.
+ *
+ * @param options Account, captcha text, cookie, and optional HTTP overrides.
+ * @returns The successful service response and request details.
+ * @throws {LoginError} If HTTP, response validation, or business checks fail.
+ */
 export async function sendSms(options: SendSmsOptions): Promise<SmsSendResult> {
   const timestamp = options.timestamp ?? Date.now();
   const params = new URLSearchParams({

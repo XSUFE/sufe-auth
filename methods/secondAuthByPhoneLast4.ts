@@ -19,6 +19,15 @@ import type {
   ResetTypeData,
 } from "../core/types";
 
+/**
+ * Check whether an account's SMS recovery number ends in the given four digits.
+ * The username is encrypted before requesting the account's recovery methods.
+ * This operation does not perform the captcha and SMS login flow.
+ *
+ * @param options Account username, four phone digits, and HTTP overrides.
+ * @returns The successful self-care response, request URL, and `matched: true`.
+ * @throws {LoginError} If input, encryption, service, or phone matching fails.
+ */
 export async function secondAuthByPhoneLast4(
   options: PhoneLast4AuthOptions
 ): Promise<PhoneLast4AuthResult> {
